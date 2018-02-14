@@ -42,12 +42,16 @@ app.get('/thanks/webhook', function(request, response) {
 })
 
 app.post('/thanks/webhook', function(request, response) {
-    console.log('POST thanks request.body ---', request.body);
     if(request.body && request.body.entry) {
         request.body.entry.forEach(function(entry) {
-            console.log('entry changes--', entry.changes);
+            entry.changes.forEach(function(change) {
+                if(change.field === 'mention') {
+                    let mention_id = (change.value.item === 'comment') ?
+                        change.value.comment_id : change.value.post_id;
+                    console.log('mention_id--', mention_id);
+                }
+            });
         });
-       
     }
     response.sendStatus(200);
 })
