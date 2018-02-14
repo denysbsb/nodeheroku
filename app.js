@@ -19,7 +19,7 @@ app.get('/thanks/webhook', function(request, response) {
 app.post('/thanks/webhook', function(request, response) {
     console.log('POST thanks request.body ---', request.body);
     if(request.body && request.body.entry) {
-        console.log('request.body.entry ---', request.body.entry);
+        console.log('request.body.entry req ---', request.body.entry);
     }
     response.sendStatus(200);
 })
