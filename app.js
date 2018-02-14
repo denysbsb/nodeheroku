@@ -1,11 +1,8 @@
 const express = require('express')
 const app = express()
-var alert = require('alert-node');
 
-app.get('/thanks/webhook/', function(req, res) {
-var nome = 0;
-console.log('Teste 2DENYS');
-res.send('Hello World!'+ nome+1);
+app.get('/', function(req, res) {
+res.send('Hello World!');
 })
 
 var porta = process.env.PORT || 8080;
