@@ -15,6 +15,8 @@ const client = new Client({
   ssl: true,
 });
 
+
+
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
 function verifyRequestSignature(req, res, buf) {
@@ -54,12 +56,9 @@ app.get('/thanks/webhook', function(request, response) {
 
 app.get('/banco', function(req, res){
     client.connect();
-    client.query('create table thanks (create_date date, permalink_url text, recipient text, recipient_manager text, sender text, message text);', (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            console.log(JSON.stringify(row));
-        }
-        client.end();
+    console.log('111client--', client);
+    client.query('CREATE DATABASE stefanini;', (err, res) => {
+        console.log('Ola create');
     });
 });
 
