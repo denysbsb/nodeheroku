@@ -7,6 +7,14 @@ var rp = require('request-promise');
 var access_token = 'DQVJ2eWpIdy15Ylc0bmpJWFV0alhzX2lWOW9vaWRfVDhZAclZAYdUJTN2hxREFabDVrU1JlTk9FZATNzbk1uVjBhZADlLQkFjNHNZAZAS1rVVhKZAEFHY0RESW5OOW5QN0R1Mk5rNEdBUGQ1Y210ZADlYRV9XYUdNLUV5NU4yNk1NYmNlSDkzdTVwSTVmQ0g0eERJWnhXMmxjSTVKeUJXc3pva2lhYWF0M2tmajhxQTNqNlpyTjQ2cGN0ZAkpFWXhZAaGN2NE1kMERQUVBIU3A5S3NQT1dtZAgZDZD';
 // var proxyMaquina = 'http://stefanini:gamouse@10.1.140.76:8080';
 
+
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
 function verifyRequestSignature(req, res, buf) {
@@ -44,22 +52,29 @@ app.get('/thanks/webhook', function(request, response) {
     }
 })
 
+app.get('/banco', function(req, res){
+    client.connect();
+    client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+        if (err) throw err;
+        for (let row of res.rows) {
+            console.log(JSON.stringify(row));
+        }
+        client.end();
+    });
+});
+
 app.post('/thanks/webhook', function(request, response) {
-    console.log('1111post call--', request.body.entry);
     if(request.body && request.body.entry) {
-        console.log('2if call--');
         request.body.entry.forEach(function(entry) {
             entry.changes.forEach(function(change) {
                 if(change.field === 'mention') {
-                    console.log('3mention --');
                     let mention_id = (change.value.item === 'comment') ?
                         change.value.comment_id : change.value.post_id;
-                    console.log('44mention_id--',mention_id);
 
-                    var GRAPH_URL_GROUPS = 'https://graph.facebook.com' + '/' + mention_id + '/likes'
+                    var GRAPH_URL_LIKES = 'https://graph.facebook.com' + '/' + mention_id + '/likes'
                     
                     rp({
-                        url: GRAPH_URL_GROUPS,
+                        url: GRAPH_URL_LIKES,
                         method: 'POST',
                         // proxy: proxyMaquina,
                         headers: {
