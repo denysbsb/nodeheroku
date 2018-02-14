@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const APP_SECRET = '6d26ed1cc4f8fed7cabe06d6e982100e';
 var rp = require('request-promise');
 var access_token = 'DQVJ2eWpIdy15Ylc0bmpJWFV0alhzX2lWOW9vaWRfVDhZAclZAYdUJTN2hxREFabDVrU1JlTk9FZATNzbk1uVjBhZADlLQkFjNHNZAZAS1rVVhKZAEFHY0RESW5OOW5QN0R1Mk5rNEdBUGQ1Y210ZADlYRV9XYUdNLUV5NU4yNk1NYmNlSDkzdTVwSTVmQ0g0eERJWnhXMmxjSTVKeUJXc3pva2lhYWF0M2tmajhxQTNqNlpyTjQ2cGN0ZAkpFWXhZAaGN2NE1kMERQUVBIU3A5S3NQT1dtZAgZDZD';
-var proxyMaquina = 'http://stefanini:gamouse@10.1.140.76:8080';
+// var proxyMaquina = 'http://stefanini:gamouse@10.1.140.76:8080';
 
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
@@ -54,14 +54,14 @@ app.post('/thanks/webhook', function(request, response) {
                     console.log('3mention --');
                     let mention_id = (change.value.item === 'comment') ?
                         change.value.comment_id : change.value.post_id;
-                    console.log('44mention_id--');
+                    console.log('44mention_id--',mention_id);
 
                     var GRAPH_URL_GROUPS = 'https://graph.facebook.com' + '/' + mention_id + '/likes'
                     
                     rp({
                         url: GRAPH_URL_GROUPS,
                         method: 'POST',
-                        proxy: proxyMaquina,
+                        // proxy: proxyMaquina,
                         headers: {
                             Authorization: 'Bearer ' + access_token
                         },
