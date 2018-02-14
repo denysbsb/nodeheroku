@@ -7,12 +7,12 @@ res.send('Hello World!');
 
 app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request.query['hub.mode']);
-    response.send('GET thanks boot');
+    response.status(200).send('GET thanks webhook');
 })
 
 app.post('/thanks/webhook', function(request, response) {
     console.log('POST thanks webhook ---', request);
-    response.send('POST thanks boot');
+    response.sendStatus(200);
 })
 
 var porta = process.env.PORT || 8080;
