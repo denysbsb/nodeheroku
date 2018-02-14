@@ -6,7 +6,7 @@ res.send('Hello World!');
 })
 
 app.get('/thanks/webhook', function(request, response) {
-    console.log('GET thanks webhook ---', request);
+    console.log('GET thanks webhook ---', request.query['hub.mode']);
     response.send('GET thanks boot');
 })
 
