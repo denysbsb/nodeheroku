@@ -5,7 +5,7 @@ app.get('/', function(req, res) {
 res.send('Hello World!');
 })
 
-app.get('/thanks/boot', function(req,res){
+app.get('/thanks/webhook/', function(req,res){
 console.log('THANKS BOOT---');
 res.send('thanks boot');
 })
