@@ -5,6 +5,7 @@ app.get('/', function(req, res) {
 res.send('Hello World!');
 })
 
+//Valida do meu webhook
 app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request.query['hub.mode']);
     if(request.query['hub.mode'] === 'subscribe'){
@@ -13,11 +14,13 @@ app.get('/thanks/webhook', function(request, response) {
         console.error('Failed validation. Make sure the validation tokens match.');
         response.sendStatus(403);
     }
-   
 })
 
 app.post('/thanks/webhook', function(request, response) {
-    console.log('POST thanks webhook ---', request);
+    console.log('POST thanks request.body ---', request.body);
+    if(request.body && request.body.entry) {
+        console.log('request.body.entry ---', request.body.entry);
+    }
     response.sendStatus(200);
 })
 
