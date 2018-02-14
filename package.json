@@ -19,6 +19,7 @@
   "homepage": "https://github.com/denysbsb/nodeheroku#readme",
   "dependencies": {
     "alert-node": "^1.0.2",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2"
   }
 }
