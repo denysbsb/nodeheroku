@@ -4,7 +4,7 @@ var alert = require('alert-node');
 
 app.get('/thanks/webhook/', function(req, res) {
 var nome = 0;
-console.log('Teste DENYS');
+console.log('Teste 2DENYS');
 res.send('Hello World!'+ nome+1);
 })
 
