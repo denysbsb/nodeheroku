@@ -7,7 +7,13 @@ res.send('Hello World!');
 
 app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request.query['hub.mode']);
-    response.status(200).send('GET thanks webhook');
+    if(request.query['hub.mode'] === 'subscribe'){
+        response.status(200).send(request.query['hub.challenge']);
+    } else {
+        console.error('Failed validation. Make sure the validation tokens match.');
+        response.sendStatus(403);
+    }
+   
 })
 
 app.post('/thanks/webhook', function(request, response) {
