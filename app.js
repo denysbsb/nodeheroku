@@ -3,6 +3,9 @@ const app = express()
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const APP_SECRET = '6d26ed1cc4f8fed7cabe06d6e982100e';
+var rp = require('request-promise');
+var access_token = 'DQVJ2eWpIdy15Ylc0bmpJWFV0alhzX2lWOW9vaWRfVDhZAclZAYdUJTN2hxREFabDVrU1JlTk9FZATNzbk1uVjBhZADlLQkFjNHNZAZAS1rVVhKZAEFHY0RESW5OOW5QN0R1Mk5rNEdBUGQ1Y210ZADlYRV9XYUdNLUV5NU4yNk1NYmNlSDkzdTVwSTVmQ0g0eERJWnhXMmxjSTVKeUJXc3pva2lhYWF0M2tmajhxQTNqNlpyTjQ2cGN0ZAkpFWXhZAaGN2NE1kMERQUVBIU3A5S3NQT1dtZAgZDZD';
+var proxyMaquina = 'http://stefanini:gamouse@10.1.140.76:8080';
 
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
@@ -42,13 +45,43 @@ app.get('/thanks/webhook', function(request, response) {
 })
 
 app.post('/thanks/webhook', function(request, response) {
+    console.log('111post call--', mention_id);
     if(request.body && request.body.entry) {
+        console.log('2if call--', mention_id);
         request.body.entry.forEach(function(entry) {
             entry.changes.forEach(function(change) {
                 if(change.field === 'mention') {
+                    console.log('3mention --', mention_id);
                     let mention_id = (change.value.item === 'comment') ?
                         change.value.comment_id : change.value.post_id;
-                    console.log('mention_id--', mention_id);
+                    console.log('44mention_id--', mention_id);
+
+                    var GRAPH_URL_GROUPS = 'https://graph.facebook.com' + '/' + mention_id + '/likes'
+                    
+                    rp({
+                        url: GRAPH_URL_GROUPS,
+                        method: 'POST',
+                        proxy: proxyMaquina,
+                        headers: {
+                            Authorization: 'Bearer ' + access_token
+                        },
+                        json: true
+                        })
+                    .then(function (res) {
+                        console.log('Like', mention_id);
+                    })
+                    .catch(function (err) {
+                        console.log('err', err);
+                    });
+
+                    let message = change.value.message,
+                    message_tags = change.value.message_tags,
+                    sender = change.value.sender_id,
+                    permalink_url = change.value.permalink_url,
+                    recipients = [],
+                    managers = [],
+                    query_inserts = [];
+
                 }
             });
         });
