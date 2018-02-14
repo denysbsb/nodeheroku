@@ -6,6 +6,7 @@ res.send('Hello World!');
 })
 
 app.get('/thanks/boot', function(req,res){
+console.log('THANKS BOOT---');
 res.send('thanks boot');
 })
 
