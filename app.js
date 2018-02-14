@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
+
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
 function verifyRequestSignature(req, res, buf) {
