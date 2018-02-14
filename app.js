@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
+const APP_SECRET = '6d26ed1cc4f8fed7cabe06d6e982100e';
 
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
