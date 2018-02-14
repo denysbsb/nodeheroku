@@ -5,14 +5,14 @@ app.get('/', function(req, res) {
 res.send('Hello World!');
 })
 
-app.get('/thanks/webhook/', function(request, response) {
+app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request);
-    res.send('GET thanks boot');
+    response.send('GET thanks boot');
 })
 
-app.post('/thanks/webhook/', function(request, response) {
+app.post('/thanks/webhook', function(request, response) {
     console.log('POST thanks webhook ---', request);
-    res.send('POST thanks boot');
+    response.send('POST thanks boot');
 })
 
 var porta = process.env.PORT || 8080;
