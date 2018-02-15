@@ -154,7 +154,7 @@ app.post('/thanks/webhook', function(request, response) {
                             console.log('body--', body);
                             
                             console.log('recipients--', recipients);
-                            
+
                             recipients.forEach(function(recipient) {
                                 let manager = '';
                                 if(body
@@ -167,7 +167,24 @@ app.post('/thanks/webhook', function(request, response) {
                                         query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
                                     }
                             });
-                            console.log(8888);
+                            console.log(888);
+                            var interval = '1 week';
+                             let query = 'INSERT INTO thanks VALUES '
+                            + query_inserts.join(',')
+                            + `; SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
+                            pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+                                console.log(999);
+                                client.query(query, function(err, result) {
+                                    done();
+                                    if (err) {
+                                        console.error('DEU err', err);
+                                    } else if (result) {
+                                        console.log('Deu resutado de FULL', result);
+                                    }
+                                });
+                            });
+                                
+                            console.log(101010);
                     });
 
                     // rp({
