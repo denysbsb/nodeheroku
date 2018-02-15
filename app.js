@@ -151,7 +151,6 @@ app.post('/thanks/webhook', function(request, response) {
                         json: true
                         }, function (err, res, body) {
                             console.log(6666);
-                            console.log('res--', res);
                             console.log('body--', body);
     
                             recipients.forEach(function(recipient) {
