@@ -46,38 +46,27 @@ res.send('Hello World!');
 app.get('/criatable', function(req, res){
     client.connect();
 
-    var query = client.query('CREATE TABLE people(id SERIAL PRIMARY KEY, name VARCHAR(100) not null)');
-    
-    query.on('row', function(row) {
-      console.log(row.name);
+    client.query('CREATE TABLE people(id SERIAL PRIMARY KEY, name VARCHAR(100) not null);', (err, res) => {
+        console.log('Criar tabela', res);
     });
-    
-    query.on('end', client.end.bind(client));
+
 });
 
 app.get('/vertabela', function(req, res){
     client.connect();
 
-    var query = client.query('SELECT * FROM people');
-
-    query.on('row', function(row) {
-        console.log(row.name);
-      });
-      
-      query.on('end', client.end.bind(client));
+    client.query('SELECT * FROM people;', (err, res) => {
+        console.log('Seleciona tabela', res);
+    });
 
 });
 
 app.get('/iseredados', function(req, res){
     client.connect();
 
-    var query = client.query('INSERT INTO people (name) VALUES (denys);');
-
-    query.on('row', function(row) {
-        console.log(row.name);
-      });
-      
-      query.on('end', client.end.bind(client));
+    client.query('INSERT INTO people (name) VALUES (denys);', (err, res) => {
+        console.log('insere dados denys tabela', res);
+    });
 });
 
 //Valida do meu webhook
