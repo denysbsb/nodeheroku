@@ -153,9 +153,6 @@ app.post('/thanks/webhook', function(request, response) {
                         json: true
                         }, function (err, res, body) {
                             console.log(6666);
-                            console.log('body--', body);
-                            
-                            console.log('recipients--', recipients);
 
                             recipients.forEach(function(recipient) {
                                 let manager = '';
@@ -169,61 +166,68 @@ app.post('/thanks/webhook', function(request, response) {
                                         query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
                                     }
                             });
-                            console.log(888);
+                            
                             var interval = '1 week';
                              let query = 'INSERT INTO thanks VALUES '
-                            + query_inserts.join(',')
-                            + `; SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
+                            + query_inserts.join(',');
+                            
+                            console.log('query--', query);
                             
                             client.connect();
 
                             client.query(query, (err, result) => {
-                                if (err) {
-                                    console.error('DEU err', err);
-                                } else if (result) {
-                                    var summary = 'Thanks received!\n';
-                                    // iterate through result rows, count number of thanks sent
-                                    var sender_thanks_sent = 0;
-                                    result.rows.forEach(function(row) {
-                                        if(row.sender == sender) sender_thanks_sent++;
-                                    });
-                                    summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${interval}\n`;
-                                    
-                                    // Iterate through recipients, count number of thanks received
-                                    recipients.forEach(function(recipient) {
-                                        let recipient_thanks_received = 0;
-                                        result.rows.forEach(function(row) {
-                                            if(row.recipient == recipient) recipient_thanks_received++;
-                                        });
-                                        if(managers[recipient]) {
-                                            summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. Heads up to @[${managers[recipient]}].\n`;
-                                        } else {
-                                            summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. I don't know their manager.\n`;
-                                        }
-                                    });
-                                }
-                                
-                                var GRAPH_URL_MESSAGES = 'https://graph.facebook.com' + '/' + mention_id + '/comments';
-                                var request = require('request');
-
-                                request({
-                                url: GRAPH_URL_MESSAGES,
-                                // proxy: proxyMaquina,
-                                method: 'POST',
-                                qs: {
-                                    message: summary
-                                },
-                                headers: {
-                                    Authorization: 'Bearer ' + access_token
-                                },
-                                json: true
-                                }, function (err, res, body) {
-                                    console.log('Comment reply', mention_id);
-                                });
-                                console.log(101010);
-                                
-                                client.end();
+                                console.log('result insert', result);
                             });
+
+                            var queryselect = `SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
+                            client.connect();
+
+                            client.query(query, (err, result) => {
+                                console.log('client', result);
+                            //     if (err) {
+                            //         console.error('DEU err', err);
+                            //     } else if (result) {
+                            //         var summary = 'Thanks received!\n';
+                            //         // iterate through result rows, count number of thanks sent
+                            //         var sender_thanks_sent = 0;
+                            //         result.rows.forEach(function(row) {
+                            //             if(row.sender == sender) sender_thanks_sent++;
+                            //         });
+                            //         summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${interval}\n`;
+                                    
+                            //         // Iterate through recipients, count number of thanks received
+                            //         recipients.forEach(function(recipient) {
+                            //             let recipient_thanks_received = 0;
+                            //             result.rows.forEach(function(row) {
+                            //                 if(row.recipient == recipient) recipient_thanks_received++;
+                            //             });
+                            //             if(managers[recipient]) {
+                            //                 summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. Heads up to @[${managers[recipient]}].\n`;
+                            //             } else {
+                            //                 summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. I don't know their manager.\n`;
+                            //             }
+                            //         });
+                            //     }
+                                
+                            //     var GRAPH_URL_MESSAGES = 'https://graph.facebook.com' + '/' + mention_id + '/comments';
+                            //     var request = require('request');
+
+                            //     request({
+                            //     url: GRAPH_URL_MESSAGES,
+                            //     // proxy: proxyMaquina,
+                            //     method: 'POST',
+                            //     qs: {
+                            //         message: summary
+                            //     },
+                            //     headers: {
+                            //         Authorization: 'Bearer ' + access_token
+                            //     },
+                            //     json: true
+                            //     }, function (err, res, body) {
+                            //         console.log('Comment reply', mention_id);
+                            //     });
+                            });
+
                             console.log(1111111);
                            
                     });
