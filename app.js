@@ -81,7 +81,7 @@ app.get('/vertabela2', function(req, res){
 app.get('/iseredados', function(req, res){
     client.connect();
 
-    client.query("INSERT INTO people (id,name) VALUES (1, 'denys');", (err, res) => {
+    client.query("INSERT INTO people (id,name) VALUES (2, 'rael');", (err, res) => {
         console.log('insere dados denys tabela', res);
     });
 });
