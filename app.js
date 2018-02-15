@@ -57,7 +57,7 @@ app.get('/criatable', function(req, res){
 app.get('/vertabela', function(req, res){
     client.connect();
 
-    client.query('SELECT * FROM thanks WHERE create_date > now() - INTERVAL 1 week;', (err, res) => {
+    client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, res) => {
         console.log('Seleciona tabela res', res);
         console.log('Seleciona tabela resrows', res.rows);
     });
