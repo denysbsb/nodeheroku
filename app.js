@@ -149,8 +149,24 @@ app.post('/thanks/webhook', function(request, response) {
                             Authorization: 'Bearer ' + access_token
                         },
                         json: true
-                        }, function (err, response, body) {
-                        console.log(err, response, body)
+                        }, function (err, res, body) {
+                            console.log(6666);
+                            console.log('res--', res);
+                            console.log('body--', body);
+    
+                            recipients.forEach(function(recipient) {
+                                let manager = '';
+                                if(body
+                                    && body[recipient]
+                                    && body[recipient].managers
+                                    && body[recipient].managers.data[0]){
+                                        console.log(7777);
+                                        manager = body[recipient].managers.data[0].id;
+                                        managers[recipient] = manager;
+                                        query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
+                                    }
+                            });
+                            console.log(8888);
                     });
 
                     // rp({
