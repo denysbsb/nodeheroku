@@ -43,6 +43,43 @@ app.get('/', function(req, res) {
 res.send('Hello World!');
 })
 
+app.get('/criatable', function(req, res){
+    client.connect();
+
+    var query = client.query('CREATE TABLE people(id SERIAL PRIMARY KEY, name VARCHAR(100) not null)');
+    
+    query.on('row', function(row) {
+      console.log(row.name);
+    });
+    
+    query.on('end', client.end.bind(client));
+});
+
+app.get('/vertabela', function(req, res){
+    client.connect();
+
+    var query = client.query('SELECT * FROM people');
+
+    query.on('row', function(row) {
+        console.log(row.name);
+      });
+      
+      query.on('end', client.end.bind(client));
+
+});
+
+app.get('/iseredados', function(req, res){
+    client.connect();
+
+    var query = client.query('INSERT INTO people (name) VALUES (denys);');
+
+    query.on('row', function(row) {
+        console.log(row.name);
+      });
+      
+      query.on('end', client.end.bind(client));
+});
+
 //Valida do meu webhook
 app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request.query['hub.mode']);
@@ -57,7 +94,7 @@ app.get('/thanks/webhook', function(request, response) {
 app.get('/banco', function(req, res){
     client.connect();
     console.log('111client--', client);
-    client.query('CREATE DATABASE stefanini;', (err, res) => {
+    client.query('SELECT * FROM stefanini;', (err, res) => {
         console.log('Ola create');
     });
 });
