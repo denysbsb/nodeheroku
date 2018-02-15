@@ -136,8 +136,9 @@ app.post('/thanks/webhook', function(request, response) {
                     });
 
                     var GRAPH_URL_MANAGERS = 'https://graph.facebook.com' + '/';
-                    
-                    rp({
+                    var request = require('request');
+ 
+                    request({
                         url: GRAPH_URL_MANAGERS,
                         // proxy: proxyMaquina,
                         qs: {
@@ -148,25 +149,40 @@ app.post('/thanks/webhook', function(request, response) {
                             Authorization: 'Bearer ' + access_token
                         },
                         json: true
-                        })
-                    .then(function (res, body) {
-                        console.log(6666);
-                        console.log('res--', res);
-                        console.log('body--', body);
+                        }, function (err, response, body) {
+                        console.log(err, response, body)
+                    });
 
-                        recipients.forEach(function(recipient) {
-                            let manager = '';
-                            if(body
-                                && body[recipient]
-                                && body[recipient].managers
-                                && body[recipient].managers.data[0]){
-                                    console.log(7777);
-                                    manager = body[recipient].managers.data[0].id;
-                                    managers[recipient] = manager;
-                                    query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
-                                }
-                        });
-                        console.log(8888);
+                    // rp({
+                    //     url: GRAPH_URL_MANAGERS,
+                    //     // proxy: proxyMaquina,
+                    //     qs: {
+                    //         ids: recipients.join(','),
+                    //         fields: 'managers'
+                    //     },
+                    //     headers: {
+                    //         Authorization: 'Bearer ' + access_token
+                    //     },
+                    //     json: true
+                    //     })
+                    // .then(function (res, body) {
+                    //     console.log(6666);
+                    //     console.log('res--', res);
+                    //     console.log('body--', body);
+
+                    //     recipients.forEach(function(recipient) {
+                    //         let manager = '';
+                    //         if(body
+                    //             && body[recipient]
+                    //             && body[recipient].managers
+                    //             && body[recipient].managers.data[0]){
+                    //                 console.log(7777);
+                    //                 manager = body[recipient].managers.data[0].id;
+                    //                 managers[recipient] = manager;
+                    //                 query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
+                    //             }
+                    //     });
+                    //     console.log(8888);
                         // var interval = '1 week';
                         // let query = 'INSERT INTO thanks VALUES '
                         //     + query_inserts.join(',')
@@ -212,9 +228,9 @@ app.post('/thanks/webhook', function(request, response) {
                         //         response.sendStatus(200);
                         //     });
                         // });
-                    }).catch(function (err) {
-                        console.log('Retorna a funcao de ERROOOOOO', err);
-                    });
+                    // }).catch(function (err) {
+                    //     console.log('Retorna a funcao de ERROOOOOO', err);
+                    // });
                 }
             });
         });
