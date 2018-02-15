@@ -64,6 +64,16 @@ app.get('/vertabela', function(req, res){
 
 });
 
+app.get('/vertabela2', function(req, res){
+    client.connect();
+
+    client.query('SELECT * FROM thanks WHERE create_date > now() - INTERVAL 1 week;', (err, res) => {
+        console.log('Seleciona tabela res', res);
+        console.log('Seleciona tabela resrows', res.rows);
+    });
+
+});
+
 app.get('/iseredados', function(req, res){
     client.connect();
 
@@ -172,14 +182,14 @@ app.post('/thanks/webhook', function(request, response) {
                             + query_inserts.join(',');
                             
                             console.log('query--', query);
-                            
+
                             client.connect();
 
                             client.query(query, (err, result) => {
                                 console.log('result insert', result);
                             });
 
-                            var queryselect = `SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
+                            var queryselect = `SELECT * FROM thanks WHERE create_date > now() - INTERVAL 1 week;`;
                             client.connect();
 
                             client.query(query, (err, result) => {
