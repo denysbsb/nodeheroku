@@ -174,16 +174,16 @@ app.post('/thanks/webhook', function(request, response) {
                              let query = 'INSERT INTO thanks VALUES '
                             + query_inserts.join(',')
                             + `; SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
-                            pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-                                console.log(999);
-                                client.query(query, function(err, result) {
-                                    done();
-                                    if (err) {
-                                        console.error('DEU err', err);
-                                    } else if (result) {
-                                        console.log('Deu resutado de FULL', result);
-                                    }
-                                });
+                            
+                            client.connect();
+
+                            client.query(query, (err, result) => {
+                                if (err) {
+                                    console.error('DEU err', err);
+                                } else if (result) {
+                                    console.log('Deu resutado de FULL', result);
+                                }
+                                client.end();
                             });
                                 
                             console.log(101010);
