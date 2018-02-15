@@ -46,7 +46,7 @@ res.send('Hello World!');
 app.get('/criatable', function(req, res){
     client.connect();
 
-    client.query('CREATE TABLE people(id SERIAL PRIMARY KEY, name VARCHAR(100) not null);', (err, res) => {
+    client.query('create table thanks (create_date date, permalink_url text, recipient text, recipient_manager text, sender text, message text);', (err, res) => {
         console.log('Criar tabela', res);
     });
 
@@ -55,7 +55,7 @@ app.get('/criatable', function(req, res){
 app.get('/vertabela', function(req, res){
     client.connect();
 
-    client.query('SELECT * FROM people;', (err, res) => {
+    client.query('SELECT * FROM thanks;', (err, res) => {
         console.log('Seleciona tabela res', res);
         console.log('Seleciona tabela resrows', res.rows);
     });
