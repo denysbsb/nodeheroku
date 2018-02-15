@@ -56,7 +56,8 @@ app.get('/vertabela', function(req, res){
     client.connect();
 
     client.query('SELECT * FROM people;', (err, res) => {
-        console.log('Seleciona tabela', res);
+        console.log('Seleciona tabela res', res);
+        console.log('Seleciona tabela resrows', res.rows);
     });
 
 });
@@ -64,7 +65,7 @@ app.get('/vertabela', function(req, res){
 app.get('/iseredados', function(req, res){
     client.connect();
 
-    client.query('INSERT INTO people (name) VALUES (denys);', (err, res) => {
+    client.query("INSERT INTO people (id,name) VALUES (1, 'denys');", (err, res) => {
         console.log('insere dados denys tabela', res);
     });
 });
