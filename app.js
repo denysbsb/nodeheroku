@@ -149,8 +149,11 @@ app.post('/thanks/webhook', function(request, response) {
                         },
                         json: true
                         })
-                    .then(function (body) {
+                    .then(function (res, body) {
                         console.log(6666);
+                        console.log('res--', res);
+                        consokle.log('body--', body);
+
                         recipients.forEach(function(recipient) {
                             let manager = '';
                             if(body
