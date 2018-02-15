@@ -90,10 +90,13 @@ app.get('/banco', function(req, res){
 });
 
 app.post('/thanks/webhook', function(request, response) {
+    console.log(1111);
     if(request.body && request.body.entry) {
+        console.log(22222);
         request.body.entry.forEach(function(entry) {
             entry.changes.forEach(function(change) {
                 if(change.field === 'mention') {
+                    console.log(33333);
                     let mention_id = (change.value.item === 'comment') ?
                         change.value.comment_id : change.value.post_id;
 
@@ -109,6 +112,7 @@ app.post('/thanks/webhook', function(request, response) {
                         json: true
                         })
                     .then(function (res) {
+                        console.log(44444);
                         console.log('Like', mention_id);
                     })
                     .catch(function (err) {
@@ -123,12 +127,97 @@ app.post('/thanks/webhook', function(request, response) {
                     managers = [],
                     query_inserts = [];
 
+                    console.log(55555);
+                    message_tags.forEach(function(message_tag) {
+                        // Ignore page / group mentions
+                        if(message_tag.type !== 'user') return;
+                        // Add the recipient to a list, for later retrieving their manager
+                        recipients.push(message_tag.id);
+                    });
+
+                    var GRAPH_URL_MANAGERS = 'https://graph.facebook.com' + '/';
+                    
+                    rp({
+                        url: GRAPH_URL_MANAGERS,
+                        // proxy: proxyMaquina,
+                        qs: {
+                            ids: recipients.join(','),
+                            fields: 'managers'
+                        },
+                        headers: {
+                            Authorization: 'Bearer ' + access_token
+                        },
+                        json: true
+                        })
+                    .then(function (body) {
+                        console.log(6666);
+                        recipients.forEach(function(recipient) {
+                            let manager = '';
+                            if(body
+                                && body[recipient]
+                                && body[recipient].managers
+                                && body[recipient].managers.data[0]){
+                                    console.log(7777);
+                                    manager = body[recipient].managers.data[0].id;
+                                    managers[recipient] = manager;
+                                    query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
+                                }
+                        });
+                        console.log(8888);
+                        // var interval = '1 week';
+                        // let query = 'INSERT INTO thanks VALUES '
+                        //     + query_inserts.join(',')
+                        //     + `; SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
+                        // pg.connect(DATABASE_URL, function(err, client, done) {
+                        //     client.query(query, function(err, result) {
+                        //         done();
+                        //         if (err) {
+                        //             console.error(err);
+                        //         } else if (result) {
+                        //             var summary = 'Thanks received!\n';
+                        //             // iterate through result rows, count number of thanks sent
+                        //             var sender_thanks_sent = 0;
+                        //             result.rows.forEach(function(row) {
+                        //                 if(row.sender == sender) sender_thanks_sent++;
+                        //             });
+                        //             summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${interval}\n`;
+                                    
+                        //             // Iterate through recipients, count number of thanks received
+                        //             recipients.forEach(function(recipient) {
+                        //                 let recipient_thanks_received = 0;
+                        //                 result.rows.forEach(function(row) {
+                        //                     if(row.recipient == recipient) recipient_thanks_received++;
+                        //                 });
+                        //                 if(managers[recipient]) {
+                        //                     summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. Heads up to @[${managers[recipient]}].\n`;
+                        //                 } else {
+                        //                     summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. I don't know their manager.\n`;
+                        //                 }
+                        //             });
+
+                        //              // Comment reply with thanks stat summary
+                        //              graphapi({
+                        //                 url: '/' + mention_id + '/comments',
+                        //                 method: 'POST',
+                        //                 qs: {
+                        //                     message: summary
+                        //                 }
+                        //             }, function(error,res,body) {
+                        //                 console.log('Comment reply', mention_id);
+                        //             });
+                        //         }
+                        //         response.sendStatus(200);
+                        //     });
+                        // });
+                    }).catch(function (err) {
+                        console.log('Retorna a funcao de ERROOOOOO', err);
+                    });
                 }
             });
         });
     }
-    response.sendStatus(200);
-})
+});
+
 
 var porta = process.env.PORT || 8080;
 app.listen(porta, () => console.log('Example app listening on port 3000!'))
