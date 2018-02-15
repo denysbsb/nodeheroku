@@ -152,7 +152,9 @@ app.post('/thanks/webhook', function(request, response) {
                         }, function (err, res, body) {
                             console.log(6666);
                             console.log('body--', body);
-    
+                            
+                            console.log('recipients--', recipients);
+                            
                             recipients.forEach(function(recipient) {
                                 let manager = '';
                                 if(body
