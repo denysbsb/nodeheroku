@@ -244,7 +244,7 @@ app.post('/thanks/webhook', function(request, response) {
                             console.log(1111111);
                            
                     });
-
+                    res.sendStatus(200);
                     // rp({
                     //     url: GRAPH_URL_MANAGERS,
                     //     // proxy: proxyMaquina,
