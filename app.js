@@ -232,31 +232,29 @@ app.post('/thanks/webhook', function(request, response) {
                                             summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt}. Não possui gerente especificado.\n`;
                                         }
                                     });
+
+                                    var GRAPH_URL_MESSAGES = 'https://graph.facebook.com' + '/' + mention_id + '/comments';
+                                    var request = require('request');
+                                    
+                                    request({
+                                        url: GRAPH_URL_MESSAGES,
+                                        // proxy: proxyMaquina,
+                                        method: 'POST',
+                                        qs: {
+                                            message: summary
+                                        },
+                                        headers: {
+                                            Authorization: 'Bearer ' + access_token
+                                        },
+                                        json: true
+                                        }, function (err, res, body) {
+                                            console.log('Comment reply', mention_id);
+                                    });
                                 }
-                                
-                                var GRAPH_URL_MESSAGES = 'https://graph.facebook.com' + '/' + mention_id + '/comments';
-                                var request = require('request');
-
-                                request({
-                                url: GRAPH_URL_MESSAGES,
-                                // proxy: proxyMaquina,
-                                method: 'POST',
-                                qs: {
-                                    message: summary
-                                },
-                                headers: {
-                                    Authorization: 'Bearer ' + access_token
-                                },
-                                json: true
-                                }, function (err, res, body) {
-                                    console.log('Comment reply', mention_id);
-                                });
+                                response.sendStatus(200);
                             });
-
-                            console.log(1111111);
-                           
                     });
-                    response.sendStatus(200);
+                    
                     // rp({
                     //     url: GRAPH_URL_MANAGERS,
                     //     // proxy: proxyMaquina,
