@@ -170,15 +170,27 @@ app.post('/thanks/webhook', function(request, response) {
 
                             recipients.forEach(function(recipient) {
                                 let manager = '';
-                                if(body
-                                    && body[recipient]
-                                    && body[recipient].managers
-                                    && body[recipient].managers.data[0]){
-                                        console.log(7777);
+                                if(body && body[recipient]) {
+                                    if(body[recipient].managers && body[recipient].managers.data[0]){
+                                        manager = body[recipient].managers.data[0].id;
+                                        managers[recipient] = manager;
                                         manager = body[recipient].managers.data[0].id;
                                         managers[recipient] = manager;
                                         query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
+                                    } else {
+                                        query_inserts.push(`(now(),'${permalink_url}','${recipient}','undefined','${sender}','${message}')`);
                                     }
+                                }
+
+                                // if(body
+                                //     && body[recipient]
+                                //     && body[recipient].managers
+                                //     && body[recipient].managers.data[0]){
+                                //         console.log(7777);
+                                //         manager = body[recipient].managers.data[0].id;
+                                //         managers[recipient] = manager;
+                                //         query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
+                                //     }
                             });
                             
                             var interval = '1 week';
