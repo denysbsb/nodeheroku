@@ -197,9 +197,8 @@ app.post('/thanks/webhook', function(request, response) {
                             client.connect();
 
                             client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, result) => {
-                                console.log('client', result);
+                                
                                 if (err) {
-                                    console.error('DEU err', err);
                                 } else if (result) {
                                     var summary = 'Agradecimento recebido!!\n';
                                     // iterate through result rows, count number of thanks sent
@@ -207,7 +206,7 @@ app.post('/thanks/webhook', function(request, response) {
                                     result.rows.forEach(function(row) {
                                         if(row.sender == sender) sender_thanks_sent++;
                                     });
-                                    summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${intervalo_pt}\n`;
+                                    // summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${intervalo_pt}\n`;
                                     
                                     // Iterate through recipients, count number of thanks received
                                     recipients.forEach(function(recipient) {
