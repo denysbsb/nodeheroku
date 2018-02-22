@@ -182,6 +182,7 @@ app.post('/thanks/webhook', function(request, response) {
                             });
                             
                             var interval = '1 week';
+                            var intervalo_pt = '1 semana';
                              let query = 'INSERT INTO thanks VALUES '
                             + query_inserts.join(',');
                             
@@ -206,7 +207,7 @@ app.post('/thanks/webhook', function(request, response) {
                                     result.rows.forEach(function(row) {
                                         if(row.sender == sender) sender_thanks_sent++;
                                     });
-                                    // summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${interval}\n`;
+                                    summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${intervalo_pt}\n`;
                                     
                                     // Iterate through recipients, count number of thanks received
                                     recipients.forEach(function(recipient) {
@@ -215,9 +216,9 @@ app.post('/thanks/webhook', function(request, response) {
                                             if(row.recipient == recipient) recipient_thanks_received++;
                                         });
                                         if(managers[recipient]) {
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${interval}. Olha só @[${managers[recipient]}].\n`;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt}. Olha só @[${managers[recipient]}].\n`;
                                         } else {
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${interval}. Não possui gerente especificado.\n`;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt}. Não possui gerente especificado.\n`;
                                         }
                                     });
                                 }
