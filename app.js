@@ -123,9 +123,8 @@ function getTotal(recipient){
 }
 
 app.post('/thanks/webhook', function(request, response) {
-    console.log(1111);
+
     if(request.body && request.body.entry) {
-        console.log(22222);
         request.body.entry.forEach(function(entry) {
             entry.changes.forEach(function(change) {
                 if(change.field === 'mention') {
@@ -159,7 +158,6 @@ app.post('/thanks/webhook', function(request, response) {
                     managers = [],
                     query_inserts = [];
 
- 
                     message_tags.forEach(function(message_tag) {
                         // Ignore page / group mentions
                         if(message_tag.type !== 'user') return;
@@ -202,9 +200,7 @@ app.post('/thanks/webhook', function(request, response) {
                             var interval = '1 week';
                             var intervalo_pt = '1 semana';
                              let query = 'INSERT INTO thanks VALUES '
-                            + query_inserts.join(',');
-                            
-        
+                            + query_inserts.join(',');                            
 
                             client.connect();
 
@@ -247,13 +243,29 @@ app.post('/thanks/webhook', function(request, response) {
                                             });
                                             var total = totalizado.length;
 
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
+                                            var agradecimento = recipient_thanks_received;
+
+                                            if(agradecimento < 2){
+                                                agradecimento = agradecimento + ' agradecimento';
+                                            } else {
+                                                agradecimento = agradecimento + ' agradecimentos';
+                                            }
+
+                                            summary += `@[${recipient}] recebeu ${agradecimento} na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
                                         } else {
                                             var totalizado = totalizadorData.filter(function(data) {
                                                 return  data.recipient === recipient;
                                             });
                                             var total = totalizado.length;
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
+                                            var agradecimento = recipient_thanks_received;
+
+                                            if(agradecimento < 2){
+                                                agradecimento = agradecimento + ' agradecimento';
+                                            } else {
+                                                agradecimento = agradecimento + ' agradecimentos';
+                                            }
+
+                                            summary += `@[${recipient}] recebeu ${agradecimento} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
                                         }
                                     });
 
@@ -278,85 +290,6 @@ app.post('/thanks/webhook', function(request, response) {
                                 response.sendStatus(200);
                             });
                     });
-                    
-                    // rp({
-                    //     url: GRAPH_URL_MANAGERS,
-                    //     // proxy: proxyMaquina,
-                    //     qs: {
-                    //         ids: recipients.join(','),
-                    //         fields: 'managers'
-                    //     },
-                    //     headers: {
-                    //         Authorization: 'Bearer ' + access_token
-                    //     },
-                    //     json: true
-                    //     })
-                    // .then(function (res, body) {
-                    //     console.log(6666);
-                    //     console.log('res--', res);
-                    //     console.log('body--', body);
-
-                    //     recipients.forEach(function(recipient) {
-                    //         let manager = '';
-                    //         if(body
-                    //             && body[recipient]
-                    //             && body[recipient].managers
-                    //             && body[recipient].managers.data[0]){
-                    //                 console.log(7777);
-                    //                 manager = body[recipient].managers.data[0].id;
-                    //                 managers[recipient] = manager;
-                    //                 query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
-                    //             }
-                    //     });
-                    //     console.log(8888);
-                        // var interval = '1 week';
-                        // let query = 'INSERT INTO thanks VALUES '
-                        //     + query_inserts.join(',')
-                        //     + `; SELECT * FROM thanks WHERE create_date > now() - INTERVAL '${interval}';`;
-                        // pg.connect(DATABASE_URL, function(err, client, done) {
-                        //     client.query(query, function(err, result) {
-                        //         done();
-                        //         if (err) {
-                        //             console.error(err);
-                        //         } else if (result) {
-                        //             var summary = 'Thanks received!\n';
-                        //             // iterate through result rows, count number of thanks sent
-                        //             var sender_thanks_sent = 0;
-                        //             result.rows.forEach(function(row) {
-                        //                 if(row.sender == sender) sender_thanks_sent++;
-                        //             });
-                        //             summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${interval}\n`;
-                                    
-                        //             // Iterate through recipients, count number of thanks received
-                        //             recipients.forEach(function(recipient) {
-                        //                 let recipient_thanks_received = 0;
-                        //                 result.rows.forEach(function(row) {
-                        //                     if(row.recipient == recipient) recipient_thanks_received++;
-                        //                 });
-                        //                 if(managers[recipient]) {
-                        //                     summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. Heads up to @[${managers[recipient]}].\n`;
-                        //                 } else {
-                        //                     summary += `@[${recipient}] has received ${recipient_thanks_received} thanks in the last ${interval}. I don't know their manager.\n`;
-                        //                 }
-                        //             });
-
-                        //              // Comment reply with thanks stat summary
-                        //              graphapi({
-                        //                 url: '/' + mention_id + '/comments',
-                        //                 method: 'POST',
-                        //                 qs: {
-                        //                     message: summary
-                        //                 }
-                        //             }, function(error,res,body) {
-                        //                 console.log('Comment reply', mention_id);
-                        //             });
-                        //         }
-                        //         response.sendStatus(200);
-                        //     });
-                        // });
-                    // }).catch(function (err) {
-                    //     console.log('Retorna a funcao de ERROOOOOO', err);
-                    // });
                 }
             });
         });
