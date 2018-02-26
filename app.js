@@ -251,7 +251,15 @@ app.post('/thanks/webhook', function(request, response) {
                                                 agradecimento = agradecimento + ' agradecimentos';
                                             }
 
-                                            summary += `@[${recipient}] recebeu ${agradecimento} na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
+                                            var agradecimentoTotal = total;
+
+                                            if (total < 2) {
+                                                agradecimentoTotal = agradecimentoTotal + ' agradecimento';
+                                            } else {
+                                                agradecimentoTotal = agradecimentoTotal + ' agradecimentos';
+                                            }
+
+                                            summary += `@[${recipient}] recebeu ${agradecimento} na última ${intervalo_pt} com o total de ${agradecimentoTotal}. Olha só @[${managers[recipient]}].\n`;
                                         } else {
                                             var totalizado = totalizadorData.filter(function(data) {
                                                 return  data.recipient === recipient;
@@ -265,7 +273,16 @@ app.post('/thanks/webhook', function(request, response) {
                                                 agradecimento = agradecimento + ' agradecimentos';
                                             }
 
-                                            summary += `@[${recipient}] recebeu ${agradecimento} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
+                                            var agradecimentoTotal = total;
+
+                                            if (total < 2) {
+                                                agradecimentoTotal = agradecimentoTotal + ' agradecimento';
+                                            } else {
+                                                agradecimentoTotal = agradecimentoTotal + ' agradecimentos';
+                                            }
+
+
+                                            summary += `@[${recipient}] recebeu ${agradecimento} na última ${intervalo_pt} com o total de ${agradecimentoTotal}. Não possui gerente especificado.\n`;
                                         }
                                     });
 
