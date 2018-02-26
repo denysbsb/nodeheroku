@@ -57,7 +57,7 @@ app.get('/criatable', function(req, res){
 app.get('/vertabela', function(req, res){
     client.connect();
 
-    client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, res) => {
+    client.query(` SELECT *, (select COUNT(*) from thanks WHERE create_date > now() - INTERVAL '1 week') as contador FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, res) => {
         console.log('Seleciona tabela res', res);
         console.log('Seleciona tabela resrows', res.rows);
     });
@@ -89,7 +89,7 @@ app.get('/iseredados', function(req, res){
 //Valida do meu webhook
 app.get('/thanks/webhook', function(request, response) {
     console.log('GET thanks webhook ---', request.query['hub.mode']);
-    if(request.query['hub.mode'] === 'subscribe'){
+    if (request.query['hub.mode'] === 'subscribe') {
         response.status(200).send(request.query['hub.challenge']);
     } else {
         console.error('Failed validation. Make sure the validation tokens match.');
@@ -143,7 +143,7 @@ app.post('/thanks/webhook', function(request, response) {
                     managers = [],
                     query_inserts = [];
 
-                    console.log(55555);
+ 
                     message_tags.forEach(function(message_tag) {
                         // Ignore page / group mentions
                         if(message_tag.type !== 'user') return;
@@ -210,6 +210,12 @@ app.post('/thanks/webhook', function(request, response) {
 
                             client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, result) => {
                                 
+
+                                console.log('** sender', sender);
+                                console.log('** recipients', recipients);
+                                console.log('** results row', result.rows);
+                                
+
                                 if (err) {
                                 } else if (result) {
                                     var summary = 'Agradecimento recebido!!\n';
@@ -221,9 +227,13 @@ app.post('/thanks/webhook', function(request, response) {
                                     // summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${intervalo_pt}\n`;
                                     
                                     // Iterate through recipients, count number of thanks received
+                                    console.log('** foreach recipients', );
+                               
                                     recipients.forEach(function(recipient) {
                                         let recipient_thanks_received = 0;
                                         result.rows.forEach(function(row) {
+                                            console.log('**into-foreach (row.recipient)', row.recipient);
+                                            console.log('** recipient', recipient);
                                             if(row.recipient == recipient) recipient_thanks_received++;
                                         });
                                         if(managers[recipient]) {
