@@ -112,7 +112,7 @@ function getTotal(recipient){
 
     client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = '100024289753034'`, (err, result) => {
         console.log('result TOTAL--', result);
-        console.log('results.rows TOTAL', result.rows);
+        console.log('results.rows TOTAL', result.rows[0].count);
     });
 
     return 14;
