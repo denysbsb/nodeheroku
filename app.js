@@ -249,6 +249,10 @@ app.post('/thanks/webhook', function(request, response) {
 
                                             summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
                                         } else {
+                                            var totalizado = totalizadorData.filter(function(data) {
+                                                return  data.recipient === recipient;
+                                            });
+                                            var total = totalizado.length;
                                             summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
                                         }
                                     });
