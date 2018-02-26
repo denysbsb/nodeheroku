@@ -105,6 +105,19 @@ app.get('/banco', function(req, res){
     });
 });
 
+function getTotal(recipient){
+
+    console.log('CALL GET TOTAL()');
+    client.connect();
+
+    client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = `+ recipient , (err, result) => {
+        console.log('result TOTAL--', result);
+        console.log('results.rows TOTAL', result.rows);
+    });
+
+    return 11;
+}
+
 app.post('/thanks/webhook', function(request, response) {
     console.log(1111);
     if(request.body && request.body.entry) {
@@ -112,7 +125,6 @@ app.post('/thanks/webhook', function(request, response) {
         request.body.entry.forEach(function(entry) {
             entry.changes.forEach(function(change) {
                 if(change.field === 'mention') {
-                    console.log(33333);
                     let mention_id = (change.value.item === 'comment') ?
                         change.value.comment_id : change.value.post_id;
 
@@ -181,16 +193,6 @@ app.post('/thanks/webhook', function(request, response) {
                                         query_inserts.push(`(now(),'${permalink_url}','${recipient}','undefined','${sender}','${message}')`);
                                     }
                                 }
-
-                                // if(body
-                                //     && body[recipient]
-                                //     && body[recipient].managers
-                                //     && body[recipient].managers.data[0]){
-                                //         console.log(7777);
-                                //         manager = body[recipient].managers.data[0].id;
-                                //         managers[recipient] = manager;
-                                //         query_inserts.push(`(now(),'${permalink_url}','${recipient}','${manager}','${sender}','${message}')`);
-                                //     }
                             });
                             
                             var interval = '1 week';
@@ -198,7 +200,7 @@ app.post('/thanks/webhook', function(request, response) {
                              let query = 'INSERT INTO thanks VALUES '
                             + query_inserts.join(',');
                             
-                            console.log('query--', query);
+        
 
                             client.connect();
 
@@ -210,12 +212,6 @@ app.post('/thanks/webhook', function(request, response) {
 
                             client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, result) => {
                                 
-
-                                console.log('** sender', sender);
-                                console.log('** recipients', recipients);
-                                console.log('** results row', result.rows);
-                                
-
                                 if (err) {
                                 } else if (result) {
                                     var summary = 'Agradecimento recebido!!\n';
@@ -227,20 +223,17 @@ app.post('/thanks/webhook', function(request, response) {
                                     // summary += `@[${sender}] has sent ${sender_thanks_sent} thanks in the last ${intervalo_pt}\n`;
                                     
                                     // Iterate through recipients, count number of thanks received
-                                    console.log('** foreach recipients', );
                                
                                     recipients.forEach(function(recipient) {
                                         let recipient_thanks_received = 0;
                                         result.rows.forEach(function(row) {
-                                            console.log('**into-foreach (row.recipient)', row.recipient);
-                                            console.log('** recipient', recipient);
                                             if(row.recipient == recipient) recipient_thanks_received++;
                                         });
                                         if(managers[recipient]) {
-                                            var total = 10;
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total}. Olha só @[${managers[recipient]}].\n`;
+                                            var total = getTotal(recipient);
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
                                         } else {
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total}. Não possui gerente especificado.\n`;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
                                         }
                                     });
 
