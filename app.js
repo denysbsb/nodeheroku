@@ -237,9 +237,10 @@ app.post('/thanks/webhook', function(request, response) {
                                             if(row.recipient == recipient) recipient_thanks_received++;
                                         });
                                         if(managers[recipient]) {
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt}. Olha só @[${managers[recipient]}].\n`;
+                                            var total = 10;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total}. Olha só @[${managers[recipient]}].\n`;
                                         } else {
-                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt}. Não possui gerente especificado.\n`;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total}. Não possui gerente especificado.\n`;
                                         }
                                     });
 
