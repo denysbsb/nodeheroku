@@ -110,12 +110,12 @@ function getTotal(recipient){
     console.log('CALL GET TOTAL()');
     client.connect();
 
-    client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = `+ recipient , (err, result) => {
+    client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = '100024289753034'`, (err, result) => {
         console.log('result TOTAL--', result);
         console.log('results.rows TOTAL', result.rows);
     });
 
-    return 11;
+    return 14;
 }
 
 app.post('/thanks/webhook', function(request, response) {
