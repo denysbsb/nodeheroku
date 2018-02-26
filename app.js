@@ -214,6 +214,13 @@ app.post('/thanks/webhook', function(request, response) {
 
                             client.connect();
 
+                            var totalizadorData = [];
+                            client.query(`SELECT * FROM thanks`, (err, result) => {
+                                result.rows.forEach(data=>{
+                                    totalizadorData.push(data)
+                                })
+                            });
+
                             client.query(`SELECT * FROM thanks WHERE create_date > now() - INTERVAL '1 week';`, (err, result) => {
                                 
                                 if (err) {
@@ -235,19 +242,12 @@ app.post('/thanks/webhook', function(request, response) {
                                         });
                                         if(managers[recipient]) {
 
-                                            client.connect();
-
-                                            client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = '` + 100024289753034 + `'`, (err, ress) => {
-                                                var total = ress.rows[0].count;
-                                                summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
-                                            });
+                                            console.log('totalizadorData--', totalizadorData);
+                                            
+                                            var total = totalizadorData.length;
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Olha só @[${managers[recipient]}].\n`;
                                         } else {
-                                            client.connect();
-
-                                            client.query(`SELECT COUNT(*) FROM thanks WHERE recipient = '` + 100024289753034 + `'`, (err, ress) => {
-                                                var total = ress.rows[0].count;
-                                                summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
-                                            });
+                                            summary += `@[${recipient}] recebeu ${recipient_thanks_received} agradecimentos na última ${intervalo_pt} com o total de ${total} agradecimentos. Não possui gerente especificado.\n`;
                                         }
                                     });
 
