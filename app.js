@@ -48,9 +48,11 @@ res.send('Hello World!');
 /// WEBHOOK MONITORAMENTO GRUPO teste
 
 //Valida webhook  MONITORAMENTO GRUPO
+
 app.get('/monitoramento', function(request, response) {
     console.log('GET monitoramento grupo ---', request.query['hub.mode']);
     if (request.query['hub.mode'] === 'subscribe') {
+        console.log('Deu successo ---');
         response.status(200).send(request.query['hub.challenge']);
     } else {
         console.error('Failed validation. Make sure the validation tokens match.');
