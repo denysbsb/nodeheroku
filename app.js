@@ -8,38 +8,6 @@ var access_token = 'DQVJ2eWpIdy15Ylc0bmpJWFV0alhzX2lWOW9vaWRfVDhZAclZAYdUJTN2hxR
 // var proxyMaquina = 'http://stefanini:gamouse@10.1.140.76:8080';
 
 
-
-/// WEBHOOK MONITORAMENTO GRUPO
-
-//Valida webhook  MONITORAMENTO GRUPO
-app.get('/monitoramento-grupo', function(request, response) {
-    console.log('GET monitoramento grupo ---', request.query['hub.mode']);
-    if (request.query['hub.mode'] === 'subscribe') {
-        response.status(200).send(request.query['hub.challenge']);
-    } else {
-        console.error('Failed validation. Make sure the validation tokens match.');
-        response.sendStatus(403);
-    }
-})
-
-  app.post('/monitoramento-grupo', function (req, res) {
-    var data = req.body;
-
-    console.log('**req.body', data);
-
-    data.entry.forEach(function(entry){
-        console.log('--foreach.entry', entry);
-        let group_id = entry.id;
-        entry.changes.forEach(function(change){
-          console.log('User Change',group_id,change);
-        });
-    });
-  });
-
-  //WEBHOOK THANKS
-
-
-
 const { Client } = require('pg');
 
 const pg = require('pg');
@@ -76,6 +44,33 @@ function verifyRequestSignature(req, res, buf) {
 app.get('/', function(req, res) {
 res.send('Hello World!');
 })
+
+/// WEBHOOK MONITORAMENTO GRUPO teste
+
+//Valida webhook  MONITORAMENTO GRUPO
+app.get('/monitoramento-grupo', function(request, response) {
+    console.log('GET monitoramento grupo ---', request.query['hub.mode']);
+    if (request.query['hub.mode'] === 'subscribe') {
+        response.status(200).send(request.query['hub.challenge']);
+    } else {
+        console.error('Failed validation. Make sure the validation tokens match.');
+        response.sendStatus(403);
+    }
+})
+
+  app.post('/monitoramento-grupo', function (req, res) {
+    var data = req.body;
+
+    console.log('**req.body', data);
+
+    data.entry.forEach(function(entry){
+        console.log('--foreach.entry', entry);
+        let group_id = entry.id;
+        entry.changes.forEach(function(change){
+          console.log('User Change',group_id,change);
+        });
+    });
+  });
 
 app.get('/criatable', function(req, res){
     client.connect();
