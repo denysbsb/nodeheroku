@@ -62,7 +62,7 @@ app.get('/monitoramento', function(request, response) {
 
   app.post('/monitoramento', function (req, res) {
     console.log('****req.body');
-    res.sendStatus(200);
+    //res.sendStatus(200);
     // var data = req.body;
 
     // console.log('**req.body', data);
