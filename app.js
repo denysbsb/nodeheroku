@@ -49,7 +49,7 @@ res.send('Hello World!');
 
 //Valida webhook  MONITORAMENTO GRUPO
 
-app.get('/monitoramento', function(request, response) {
+app.get('/monitoramento/webhook', function(request, response) {
     console.log('GET monitoramento grupo ---', request.query['hub.mode']);
     if (request.query['hub.mode'] === 'subscribe') {
         console.log('Deu successo ---');
@@ -60,7 +60,7 @@ app.get('/monitoramento', function(request, response) {
     }
 })
 
-  app.post('/monitoramento', function (req, res) {
+  app.post('/monitoramento/webhook', function (req, res) {
     console.log('****req.body');
     //res.sendStatus(200);
     // var data = req.body;
