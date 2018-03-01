@@ -48,7 +48,7 @@ res.send('Hello World!');
 /// WEBHOOK MONITORAMENTO GRUPO teste
 
 //Valida webhook  MONITORAMENTO GRUPO
-app.get('/monitoramento-grupo', function(request, response) {
+app.get('/monitoramento', function(request, response) {
     console.log('GET monitoramento grupo ---', request.query['hub.mode']);
     if (request.query['hub.mode'] === 'subscribe') {
         response.status(200).send(request.query['hub.challenge']);
@@ -58,7 +58,7 @@ app.get('/monitoramento-grupo', function(request, response) {
     }
 })
 
-  app.post('/monitoramento-grupo', function (req, res) {
+  app.post('/monitoramento', function (req, res) {
     var data = req.body;
 
     console.log('**req.body', data);
