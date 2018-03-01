@@ -61,17 +61,18 @@ app.get('/monitoramento', function(request, response) {
 })
 
   app.post('/monitoramento', function (req, res) {
-    var data = req.body;
+    console.log('**req.body')
+    // var data = req.body;
 
-    console.log('**req.body', data);
+    // console.log('**req.body', data);
 
-    data.entry.forEach(function(entry){
-        console.log('--foreach.entry', entry);
-        let group_id = entry.id;
-        entry.changes.forEach(function(change){
-          console.log('User Change',group_id,change);
-        });
-    });
+    // data.entry.forEach(function(entry){
+    //     console.log('--foreach.entry', entry);
+    //     let group_id = entry.id;
+    //     entry.changes.forEach(function(change){
+    //       console.log('User Change',group_id,change);
+    //     });
+    // });
   });
 
 app.get('/criatable', function(req, res){
